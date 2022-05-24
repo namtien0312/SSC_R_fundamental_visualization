@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Trình bày kết quả nghiên cứu với R - Bài 2 - SSC</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Tien N.T.Nguyen" />
+    <script src="libs/header-attrs-2.14/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/tile-view-0.2.6/tile-view.css" rel="stylesheet" />
+    <script src="libs/tile-view-0.2.6/tile-view.js"></script>
+    <script src="libs/fabric-4.3.1/fabric.min.js"></script>
+    <link href="libs/xaringanExtra-scribble-0.0.1/scribble.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-scribble-0.0.1/scribble.js"></script>
+    <script>document.addEventListener('DOMContentLoaded', function() { window.xeScribble = new Scribble({"pen_color":["#FF0000"],"pen_size":3,"eraser_size":30,"palette":[]}) })</script>
+    <script src="libs/xaringanExtra_fit-screen-0.2.6/fit-screen.js"></script>
+    <link href="libs/xaringanExtra-extra-styles-0.2.6/xaringanExtra-extra-styles.css" rel="stylesheet" />
+    <script src="libs/mark.js-8.11.1/mark.min.js"></script>
+    <link href="libs/xaringanExtra-search-0.0.1/search.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-search-0.0.1/search.js"></script>
+    <script>window.addEventListener('load', function() { window.xeSearch = new RemarkSearch({"position":"bottom-left","caseSensitive":false,"showIcon":true,"autoSearch":true}) })</script>
+    <link rel="stylesheet" href="sydney-fonts.css" type="text/css" />
+    <link rel="stylesheet" href="sydney.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+
+
+<div>
+<style type="text/css">.xaringan-extra-logo {
+width: 110px;
+height: 100px;
+z-index: 0;
+background-image: url(ssc_logo.png);
+background-size: contain;
+background-repeat: no-repeat;
+position: absolute;
+top:0.05em;right:0.56em;
+}
+</style>
+<script>(function () {
+  let tries = 0
+  function addLogo () {
+    if (typeof slideshow === 'undefined') {
+      tries += 1
+      if (tries < 10) {
+        setTimeout(addLogo, 100)
+      }
+    } else {
+      document.querySelectorAll('.remark-slide-content:not(.title-slide):not(.inverse):not(.hide_logo)')
+        .forEach(function (slide) {
+          const logo = document.createElement('div')
+          logo.classList = 'xaringan-extra-logo'
+          logo.href = null
+          slide.appendChild(logo)
+        })
+    }
+  }
+  document.addEventListener('DOMContentLoaded', addLogo)
+})()</script>
+</div>
+
+
+
+
+
+
+
+.title[.bold[Trình bày kết quả nghiên cứu với R]]
+
+.font120[
+**Bài 2: Nguyên tắc trực quan hóa dữ liệu trên R**
+]
+
+&lt;style&gt;
+.title {
+  font-size: 56px;
+  font-family: 'Roboto', Arial, sans-serif;
+  color: #008080;
+}
+&lt;/style&gt;
+
+&lt;img src="R_Rstudio.png" width="200px"/&gt;
+
+&lt;/br&gt;
+Tien N.T.Nguyen | Trung tâm .orange[DI] &amp; .blue[ADR] Quốc gia, HUP | 20 May. 2022
+
+---
+### .ssc[Trực quan hóa với `ggplot2` - kết hợp `layer`]
+&lt;br&gt;
+.center[
+&lt;img src="ggplot2_layer.png" width="50%" height="50%" /&gt;
+]
+
+--
+**Dữ liệu đầu vào yêu cầu ở dạng tidy data**
+
+---
+### .ssc[Đọc các file sử dụng]
+
+
+```r
+df1 = read.csv("E:/SSC_R_visu/data_ggplot2_layer.csv")
+df_bar = read_xlsx("E:/SSC_R_visu/bar_error_bar.xlsx", sheet = "No_Error_bar")
+df_bar_error = read_xlsx("E:/SSC_R_visu/bar_error_bar.xlsx", sheet = "With_error_bar")
+df_evo_1 = read_xlsx("E:/SSC_R_visu/Anbio_asump.xlsx", sheet = "Tidy")
+names(df_evo_1) = c("Time", "Year", "Month", "Drug", "DDD")
+df_evo_2 = read_xlsx("E:/SSC_R_visu/PK_data.xlsx")
+df_table = read_xlsx("E:/SSC_R_visu/data_table.xlsx")
+```
+**Lưu ý: Đây đều là dữ liệu có sẵn/tự tạo -&gt; sử dụng mà không cần sự cho phép**
+
+---
+### .ssc[Trực quan hóa với `ggplot2` - kết hợp `layer`]
+
+.pull-left[
+**Data layer**
+
+```r
+ggplot(data = df1)
+```
+]
+
+--
+.pull-right[
+&lt;img src="SSC_R_visu_Bai2_ggplot_layer_files/figure-html/data_layers-1.png" width="672" /&gt;
+]
+
+---
+### .ssc[Trực quan hóa với `ggplot2` - kết hợp `layer`]
+
+.pull-left[
+**Aesthetic layer**
+
+```r
+ggplot(
+  data = df1,
+* aes(x = AGE, y = df1$CRCL)
+) 
+```
+]
+
+--
+.pull-right[
+&lt;img src="SSC_R_visu_Bai2_ggplot_layer_files/figure-html/aes_layers-1.png" width="672" /&gt;
+]
+
+---
+### .ssc[Trực quan hóa với `ggplot2` - kết hợp `layer`]
+
+.pull-left[
+**Geometries Layer**
+
+```r
+ggplot(
+  data = df1,
+  aes(x = AGE, y = df1$CRCL) 
+) +
+* geom_point()
+```
+]
+
+--
+.pull-right[
+&lt;img src="SSC_R_visu_Bai2_ggplot_layer_files/figure-html/geom_layers_messy-1.png" width="672" /&gt;
+]
+
+---
+### .ssc[Trực quan hóa với `ggplot2` - kết hợp `layer`]
+
+.pull-left[
+**Geometries Layer** with **Aesthetics layer** &lt;br&gt;
+Ví dụ: `color` for `geom_point`
+
+```r
+ggplot(
+  data = df1,
+  aes(x = AGE, y = CRCL)  
+) +
+* geom_point(aes(color = GENDER))
+```
+]
+
+--
+.pull-right[
+&lt;img src="SSC_R_visu_Bai2_ggplot_layer_files/figure-html/geom_aes_layers-1.png" width="672" /&gt;
+]
+
+---
+### .ssc[Trực quan hóa với `ggplot2` - kết hợp `layer`]
+
+.pull-left[
+**Facets Layer** với Hàm `facet_wrap()`
+
+```r
+ggplot(
+  data = df1,
+  aes(x = AGE, y = CRCL)  
+) +
+  geom_point(aes(color = GENDER)) +
+* facet_wrap(~ RACE)
+```
+]
+
+--
+.pull-right[
+&lt;img src="SSC_R_visu_Bai2_ggplot_layer_files/figure-html/facet_layers-1.png" width="672" /&gt;
+]
+
+---
+### .ssc[Trực quan hóa với `ggplot2` - kết hợp `layer`]
+
+.pull-left[
+**Facets Layer** &lt;br&gt;
+Hàm `facet_wrap()` - **tùy chỉnh được số dòng**
+
+```r
+ggplot(
+  data = df1,
+  aes(x = AGE, y = CRCL)  
+) +
+  geom_point(aes(color = GENDER)) +
+* facet_wrap(~ RACE, nrow = 4)
+```
+]
+
+--
+.pull-right[
+&lt;img src="SSC_R_visu_Bai2_ggplot_layer_files/figure-html/facet_wrap-1.png" width="672" /&gt;
+]
+
+---
+### .ssc[Trực quan hóa với `ggplot2` - kết hợp `layer`]
+
+.pull-left[
+**Facets Layer** &lt;br&gt;
+Hàm `facet_grid()` - không tùy chỉnh được số dòng
+
+```r
+ggplot(
+  data = df1,
+  aes(x = AGE, y = CRCL)  
+) +
+  geom_point(aes(color = GENDER)) +
+* facet_grid(~ RACE)
+```
+]
+
+--
+.pull-right[
+&lt;img src="SSC_R_visu_Bai2_ggplot_layer_files/figure-html/facet_grid-1.png" width="672" /&gt;
+]
+
+---
+### .ssc[Trực quan hóa với `ggplot2` - kết hợp `layer`]
+
+.pull-left[
+**Facets Layer** &lt;br&gt;
+Hàm `facet_grid()` - dùng cho 2 biến muốn `facet`
+
+```r
+ggplot(
+  data = df1,
+  aes(x = AGE, y = CRCL)  
+) +
+  geom_point(aes(color = GENDER)) +
+* facet_grid(Dai_thao_duong ~ RACE)
+```
+]
+
+--
+.pull-right[
+&lt;img src="SSC_R_visu_Bai2_ggplot_layer_files/figure-html/facet_grid2-1.png" width="672" /&gt;
+]
+
+---
+### .ssc[Trực quan hóa với `ggplot2` - kết hợp `layer`]
+
+.pull-left[
+**Statistics Layer**
+
+```r
+ggplot(
+  data = df1,
+  aes(x = AGE, y = CRCL)  
+) +
+  geom_point(aes(color = GENDER)) +
+* stat_smooth(method = "lm", se = FALSE)
+```
+]
+
+--
+.pull-right[
+&lt;img src="SSC_R_visu_Bai2_ggplot_layer_files/figure-html/stat_layers-1.png" width="672" /&gt;
+]
+
+---
+### .ssc[Trực quan hóa với `ggplot2` - kết hợp `layer`]
+
+.pull-left[
+**Statistics Layer**
+
+```r
+ggplot(
+  data = df1,
+  aes(x = AGE, y = CRCL)  
+) +
+  geom_point(aes(color = GENDER)) +
+* stat_smooth(method = "lm", se = TRUE)
+```
+]
+
+--
+.pull-right[
+&lt;img src="SSC_R_visu_Bai2_ggplot_layer_files/figure-html/stat_layers_se-1.png" width="672" /&gt;
+]
+
+---
+### .ssc[Trực quan hóa với `ggplot2` - kết hợp `layer`]
+
+.pull-left[
+**Coordinates Layer** - original scales
+
+```r
+ggplot(
+  data = df1,
+  aes(x = AGE, y = CRCL)  
+) +
+  geom_point(aes(color = GENDER))
+```
+]
+
+--
+.pull-right[
+&lt;img src="SSC_R_visu_Bai2_ggplot_layer_files/figure-html/coord_layers-1.png" width="672" /&gt;
+]
+
+---
+### .ssc[Trực quan hóa với `ggplot2` - kết hợp `layer`]
+
+.pull-left[
+**Coordinates Layer**: thay đổi giới hạn trục số &lt;br&gt;
+`scale_x/y_continuous` cho biến liên tục
+
+```r
+ggplot(
+  data = df1,
+  aes(x = AGE, y = CRCL)  
+) +
+  geom_point(aes(color = GENDER)) +
+* scale_x_continuous(limits = c(20, 40)) +
+* scale_y_continuous(limits = c(125, 150))
+```
+]
+
+--
+.pull-right[
+&lt;img src="SSC_R_visu_Bai2_ggplot_layer_files/figure-html/coord_layers3-1.png" width="672" /&gt;
+]
+
+---
+### .ssc[Trực quan hóa với `ggplot2` - kết hợp `layer`]
+
+.pull-left[
+**Coordinates Layer**: chia khoảng trục số với `break`
+
+```r
+ggplot(
+  data = df1,
+  aes(x = AGE, y = CRCL)  
+) +
+  geom_point(aes(color = GENDER)) +
+  scale_x_continuous(
+    limits = c(20, 80), 
+*   breaks = c(20, 30, 40, 50, 60, 70, 80)
+  ) 
+```
+]
+
+--
+.pull-right[
+&lt;img src="SSC_R_visu_Bai2_ggplot_layer_files/figure-html/coord_layers4-1.png" width="672" /&gt;
+]
+
+---
+### .ssc[Trực quan hóa với `ggplot2` - kết hợp `layer`]
+
+.pull-left[
+**Coordinates Layer**: chia khoảng trục số với `break`
+
+```r
+ggplot(
+  data = df1,
+  aes(x = AGE, y = CRCL)  
+) +
+  geom_point(aes(color = GENDER)) +
+  scale_x_continuous(
+    limits = c(20, 80), 
+*   breaks = seq(20, 80, by = 10)
+  ) 
+```
+]
+
+--
+.pull-right[
+&lt;img src="SSC_R_visu_Bai2_ggplot_layer_files/figure-html/coord_layers5-1.png" width="672" /&gt;
+]
+
+---
+### .ssc[Trực quan hóa với `ggplot2` - kết hợp `layer`]
+
+.pull-left[
+**Themes Layer** - Tên trục, title, legend
+
+```r
+ggplot(
+  data = df1,
+  aes(x = AGE, y = CRCL)  
+) +
+  geom_point(aes(color = GENDER)) +
+* labs(
+*   title = "Scatter plot",
+*   subtitle = "Age vs. Clcr",
+*   caption = "Source: SSC",
+*   x = "Age (years)",
+*   y = "Clcr (mL/min)",
+*   color = "Gender"
+  ) 
+```
+]
+
+--
+.pull-right[
+&lt;img src="SSC_R_visu_Bai2_ggplot_layer_files/figure-html/theme_layers-1.png" width="672" /&gt;
+]
+
+---
+### .ssc[Trực quan hóa với `ggplot2` - kết hợp `layer`]
+
+.pull-left[
+**Themes Layer** - Tên trục tiếng Việt
+
+```r
+ggplot(
+  data = df1,
+  aes(x = AGE, y = CRCL)  
+) +
+  geom_point(aes(color = GENDER)) +
+* labs(
+*   title = "Biểu đồ phân tán",
+*   subtitle = "Tương quan Tuổi và Chức năng thận",
+*   caption = "Nguồn: SSC",
+*   x = "Tuổi (năm)",
+*   y = "Chức năng thận (mL/min)",
+*   color = "Giới"
+  ) 
+```
+]
+
+--
+.pull-right[
+&lt;img src="SSC_R_visu_Bai2_ggplot_layer_files/figure-html/theme_layers_vms-1.png" width="672" /&gt;
+**Lỗi font chữ**
+]
+
+---
+### .ssc[Trực quan hóa với `ggplot2` - kết hợp `layer`] 
+#### Font tiếng việt cho `ggplot2`
+Bước 1: Click vào `escape` [tại đây](https://freeformatter.com/javascript-escape.html?fbclid=IwAR3zH0xxUCeCQxLMEKjeGg8mzNcY0tTphzAafysyNSIvdXOhY5kUGNmEVMs)
+&lt;img src="ggplot2_escape.png" width="1395" /&gt;
+
+Bước 2: copy và đưa vào đồ thị
+&lt;img src="ggplot2_escape_output.png" width="1151" /&gt;
+
+---
+### .ssc[Trực quan hóa với `ggplot2` - kết hợp `layer`]
+
+.pull-left[
+**Themes Layer** - Tên trục, title, legend
+
+```r
+ggplot(
+  data = df1,
+  aes(x = AGE, y = CRCL)  
+) +
+  geom_point(aes(color = GENDER)) +
+* labs(
+*   title = "Bi\u1EC3u \u0111\u1ED3 ph\u00E2n t\u00E1n",
+*   subtitle = "T\u01B0\u01A1ng quan Tu\u1ED5i v\u00E0 Ch\u1EE9c n\u0103ng th\u1EADn",
+*   caption = "Ngu\u1ED3n: SSC",
+*   x = "Tu\u1ED5i (n\u0103m)",
+*   y = "Ch\u1EE9c n\u0103ng th\u1EADn (mL/ph\u00FAt)",
+*   color = "Gi\u1EDBi"
+  ) 
+```
+]
+
+--
+.pull-right[
+&lt;img src="SSC_R_visu_Bai2_ggplot_layer_files/figure-html/theme_layers_vms_esp-1.png" width="672" /&gt;
+**Wonderful**
+]
+
+---
+### .ssc[Trực quan hóa với `ggplot2` - kết hợp `layer`]
+
+.pull-left[
+**Themes Layer** - Themes
+
+```r
+ggplot(
+  data = df1,
+  aes(x = AGE, y = CRCL)  
+) +
+  geom_point(aes(color = GENDER)) +
+  facet_grid(RACE ~ Dai_thao_duong) +
+  labs(                                             
+    title = "Bi\u1EC3u \u0111\u1ED3 ph\u00E2n t\u00E1n",                        
+    subtitle = "T\u01B0\u01A1ng quan Tu\u1ED5i v\u00E0 Ch\u1EE9c n\u0103ng th\u1EADn",    
+    caption = "Ngu\u1ED3n: SSC",            
+    x = "Tu\u1ED5i (n\u0103m)",                               
+    y = "Ch\u1EE9c n\u0103ng th\u1EADn (mL/ph\u00FAt)",                                             
+    color = "Gi\u1EDBi"                                          
+  ) +
+* theme_light()
+```
+]
+
+--
+.pull-right[
+&lt;img src="SSC_R_visu_Bai2_ggplot_layer_files/figure-html/theme_layers2-1.png" width="672" /&gt;
+]
+
+---
+### .ssc[Trực quan hóa với `ggplot2` - kết hợp `layer`]
+
+.pull-left[
+**Themes Layer** - Themes
+
+```r
+ggplot(
+  data = df1,
+  aes(x = AGE, y = CRCL)  
+) +
+  geom_point(aes(color = GENDER)) +
+  facet_grid(RACE ~ Dai_thao_duong) +
+  labs(                                            
+    title = "Bi\u1EC3u \u0111\u1ED3 ph\u00E2n t\u00E1n",                         
+    subtitle = "T\u01B0\u01A1ng quan Tu\u1ED5i v\u00E0 Ch\u1EE9c n\u0103ng th\u1EADn",    
+    caption = "Ngu\u1ED3n: SSC",            
+    x = "Tu\u1ED5i (n\u0103m)",                              
+    y = "Ch\u1EE9c n\u0103ng th\u1EADn (mL/ph\u00FAt)",                                           
+    color = "Gi\u1EDBi"                                           
+  ) +
+* theme_bw()
+```
+]
+
+.pull-right[
+&lt;img src="SSC_R_visu_Bai2_ggplot_layer_files/figure-html/theme_layers4-1.png" width="672" /&gt;
+]
+
+---
+### .ssc[Trực quan hóa với `ggplot2` - kết hợp `layer`]
+
+.pull-left[
+**Themes Layer** - Themes
+
+```r
+ggplot(
+  data = df1,
+  aes(x = AGE, y = CRCL)  
+) +
+  geom_point(aes(color = GENDER)) +
+  facet_grid(RACE ~ Dai_thao_duong) +
+  labs(                                            
+    title = "Bi\u1EC3u \u0111\u1ED3 ph\u00E2n t\u00E1n",                       
+    subtitle = "T\u01B0\u01A1ng quan Tu\u1ED5i v\u00E0 Ch\u1EE9c n\u0103ng th\u1EADn",     
+    caption = "Ngu\u1ED3n: SSC",            
+    x = "Tu\u1ED5i (n\u0103m)",                                
+    y = "Ch\u1EE9c n\u0103ng th\u1EADn (mL/ph\u00FAt)",                                             
+    color = "Gi\u1EDBi"                                          
+  ) +
+* theme_dark()
+```
+]
+
+.pull-right[
+&lt;img src="SSC_R_visu_Bai2_ggplot_layer_files/figure-html/theme_layers3-1.png" width="672" /&gt;
+]
+
+---
+### .ssc[Trực quan hóa với `ggplot2` - kết hợp `layer`]
+**Themes Layer** - Themes Gallery
+.center[
+&lt;img src="ggplot2_themes.png" width="40%" height="35%" /&gt;
+]
+
+---
+### .ssc[Trực quan hóa với `ggplot2` - kết hợp `layer`]
+
+.pull-left[
+**Themes Layer** - Tùy chỉnh `themes`
+- Tất cả phần tử `chữ` (`text`) đều có thể thay đổi bằng `element_text()`
+- Tất cả phần tử `đường` (`line`) đều có thể thay đổi bằng `element_line()`
+- Tất cả phần tử `hình chữ nhật` (`rect`) đều có thể thay đổi bằng `element_rect()`
+
+.center[
+&lt;img src="theme_customize1.png" width="85%" height="85%" /&gt;
+]
+]
+
+--
+.pull-right[
+Sau đó, có thể tùy chỉnh các đặc tính khác như: `color`, `linetype`, `size`, `font`, ...
+.center[
+&lt;img src="theme_customize2.png" width="85%" height="85%" /&gt;
+]
+]
+
+---
+### .ssc[Trực quan hóa với `ggplot2` - kết hợp `layer`]
+**Themes Layer** - Thay đổi màu chữ trục x và y sang đỏ &amp; tăng size
+
+.pull-left[
+
+```r
+ggplot(
+  data = df1,
+  aes(x = AGE, y = CRCL)  
+) +
+  geom_point(aes(color = GENDER)) +
+  labs(                                                
+    caption = "Ngu\u1ED3n: SSC",            
+    x = "Tu\u1ED5i (n\u0103m)",                                
+    y = "Ch\u1EE9c n\u0103ng th\u1EADn (mL/ph\u00FAt)",                                             
+    color = "Gi\u1EDBi"                                          
+  ) +
+  theme_minimal() +
+  theme(
+*   axis.text = element_text(color = "red", size = 15)
+  )
+```
+]
+
+--
+.pull-right[
+&lt;img src="SSC_R_visu_Bai2_ggplot_layer_files/figure-html/theme_cus1-1.png" width="672" /&gt;
+]
+
+---
+### .ssc[Trực quan hóa với `ggplot2` - kết hợp `layer`]
+**Themes Layer** - Thay đổi màu chữ của mỗi trục x sang đỏ &amp; tăng size
+
+.pull-left[
+
+```r
+ggplot(
+  data = df1,
+  aes(x = AGE, y = CRCL)  
+) +
+  geom_point(aes(color = GENDER)) +
+  labs(                                                
+    caption = "Ngu\u1ED3n: SSC",            
+    x = "Tu\u1ED5i (n\u0103m)",                                
+    y = "Ch\u1EE9c n\u0103ng th\u1EADn (mL/ph\u00FAt)",                                             
+    color = "Gi\u1EDBi"                                          
+  ) +
+  theme_minimal() +
+  theme(
+*   axis.text.x = element_text(color = "red", size = 15)
+  )
+```
+]
+
+--
+.pull-right[
+&lt;img src="SSC_R_visu_Bai2_ggplot_layer_files/figure-html/theme_cus2-1.png" width="672" /&gt;
+]
+
+---
+### .ssc[Trực quan hóa với `ggplot2` - kết hợp `layer`]
+**Themes Layer** - tùy chỉnh nhiều lần
+
+.pull-left[
+
+```r
+ggplot(
+  data = df1,
+  aes(x = AGE, y = CRCL)  
+) +
+  geom_point(aes(color = GENDER)) +
+  labs(                                                
+    caption = "Ngu\u1ED3n: SSC",            
+    x = "Tu\u1ED5i (n\u0103m)",                                
+    y = "Ch\u1EE9c n\u0103ng th\u1EADn (mL/ph\u00FAt)",                                             
+    color = "Gi\u1EDBi"                                          
+  ) +
+  theme_minimal() +
+* theme(
+    # ĐỔi màu, tăng size, in đậm trục x (text của trục)
+    axis.text.x = element_text(color = "red", 
+                               size = 14, face = "bold"),
+    # Thay đổi tương tự cho tên trục (title của trục)
+    axis.title.x = element_text(color = "red", 
+                                size = 14, face = "bold"),
+    # Bỏ hết đường lưới
+    panel.grid = element_blank(),
+    # Chỉnh màu nền
+    panel.background = element_rect(fill = "pink"),
+    # Thay đổi title of plots
+    plot.title = element_text(size = 8)
+  )
+```
+]
+
+--
+.pull-right[
+&lt;img src="SSC_R_visu_Bai2_ggplot_layer_files/figure-html/theme_cus3-1.png" width="672" /&gt;
+]
+
+---
+### .ssc[Trực quan hóa với `ggplot2` - kết hợp `layer`]
+
+.pull-left[
+**Themes Layer** - **Bị đè lên nhau**
+![](SSC_R_visu_Bai2_ggplot_layer_files/figure-html/theme_cus4-1.png)&lt;!-- --&gt;
+]
+
+--
+.pull-right[
+**Themes Layer** - **Thay đổi góc - 90 độ**
+![](SSC_R_visu_Bai2_ggplot_layer_files/figure-html/theme_cus5-1.png)&lt;!-- --&gt;
+]
+
+---
+### .ssc[Trực quan hóa với `ggplot2` - kết hợp `layer`]
+
+.pull-left[
+**Themes Layer** - **Bị đè lên nhau**
+![](SSC_R_visu_Bai2_ggplot_layer_files/figure-html/unnamed-chunk-32-1.png)&lt;!-- --&gt;
+]
+
+--
+.pull-right[
+**Đổi góc 30 + chỉnh vị trí**
+![](SSC_R_visu_Bai2_ggplot_layer_files/figure-html/unnamed-chunk-33-1.png)&lt;!-- --&gt;
+]
+
+---
+### .ssc[Trực quan hóa với `ggplot2` - kết hợp `layer`]
+
+.pull-left[
+**Themes Layer** - **Bị đè lên nhau**
+![](SSC_R_visu_Bai2_ggplot_layer_files/figure-html/unnamed-chunk-34-1.png)&lt;!-- --&gt;
+]
+
+--
+.pull-right[
+**Xoay ngang trục**
+![](SSC_R_visu_Bai2_ggplot_layer_files/figure-html/unnamed-chunk-35-1.png)&lt;!-- --&gt;
+]
+
+---
+### .ssc[Lưu đồ thị với `ggsave`]
+
+
+```r
+p = ggplot(df_evo_1, aes(x = Time, y = DDD)) +
+  geom_area(aes(fill = Drug), size = 0.88) +
+  theme_bw()
+```
+
+.pull-left[
+```{}
+p + ggsave("E:/SSC_R_visu/no_dpi.png", 
+           width = 10, height = 8,
+           dpi = 50)
+```
+.center[
+&lt;img src="no_dpi.png" width="80%" height="80%" /&gt;
+]
+]
+
+.pull-right[
+```{}
+p + ggsave("E:/SSC_R_visu/dpi.png", 
+           width = 10, height = 8,
+           dpi = 800)
+```
+.center[
+&lt;img src="dpi.png" width="80%" height="80%" /&gt;
+]
+]
+
+---
+class: center, middle
+&lt;img src="tks_slide.png" width="60%" height="60%" /&gt;
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9",
+"navigation": {
+"scroll": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+<style>
+.logo {
+  background-image: url(logoADR.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  position: absolute;
+  top: 1.2em;
+  right: 5em;
+  width: 110px;
+  height: 112px;
+  z-index: 0;
+}
+</style>
+
+<script>
+document
+  .querySelectorAll(
+    '.remark-slide-content' +
+    ':not(.title-slide)' +
+    // add additional classes to exclude here, e.g.
+    // ':not(.inverse)' +
+    ':not(.hide-logo)'
+  )
+  .forEach(el => {
+    el.innerHTML += '<div class="logo"></div>';
+  });
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
