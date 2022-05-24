@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Trình bày kết quả nghiên cứu với R - Bài 1 - SSC</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Tien N.T.Nguyen" />
+    <script src="libs/header-attrs-2.14/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/tile-view-0.2.6/tile-view.css" rel="stylesheet" />
+    <script src="libs/tile-view-0.2.6/tile-view.js"></script>
+    <script src="libs/fabric-4.3.1/fabric.min.js"></script>
+    <link href="libs/xaringanExtra-scribble-0.0.1/scribble.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-scribble-0.0.1/scribble.js"></script>
+    <script>document.addEventListener('DOMContentLoaded', function() { window.xeScribble = new Scribble({"pen_color":["#FF0000"],"pen_size":3,"eraser_size":30,"palette":[]}) })</script>
+    <script src="libs/xaringanExtra_fit-screen-0.2.6/fit-screen.js"></script>
+    <link href="libs/xaringanExtra-extra-styles-0.2.6/xaringanExtra-extra-styles.css" rel="stylesheet" />
+    <script src="libs/mark.js-8.11.1/mark.min.js"></script>
+    <link href="libs/xaringanExtra-search-0.0.1/search.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-search-0.0.1/search.js"></script>
+    <script>window.addEventListener('load', function() { window.xeSearch = new RemarkSearch({"position":"bottom-left","caseSensitive":false,"showIcon":true,"autoSearch":true}) })</script>
+    <script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+    <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+    <script src="libs/datatables-binding-0.22/datatables.js"></script>
+    <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+    <link href="libs/dt-core-1.11.3/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="libs/dt-core-1.11.3/css/jquery.dataTables.extra.css" rel="stylesheet" />
+    <script src="libs/dt-core-1.11.3/js/jquery.dataTables.min.js"></script>
+    <script src="libs/jszip-1.11.3/jszip.min.js"></script>
+    <link href="libs/dt-ext-buttons-1.11.3/css/buttons.dataTables.min.css" rel="stylesheet" />
+    <script src="libs/dt-ext-buttons-1.11.3/js/dataTables.buttons.min.js"></script>
+    <script src="libs/dt-ext-buttons-1.11.3/js/buttons.html5.min.js"></script>
+    <script src="libs/dt-ext-buttons-1.11.3/js/buttons.colVis.min.js"></script>
+    <script src="libs/dt-ext-buttons-1.11.3/js/buttons.print.min.js"></script>
+    <link href="libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
+    <script src="libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+    <link rel="stylesheet" href="sydney-fonts.css" type="text/css" />
+    <link rel="stylesheet" href="sydney.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+
+
+<div>
+<style type="text/css">.xaringan-extra-logo {
+width: 110px;
+height: 100px;
+z-index: 0;
+background-image: url(ssc_logo.png);
+background-size: contain;
+background-repeat: no-repeat;
+position: absolute;
+top:0.05em;right:0.56em;
+}
+</style>
+<script>(function () {
+  let tries = 0
+  function addLogo () {
+    if (typeof slideshow === 'undefined') {
+      tries += 1
+      if (tries < 10) {
+        setTimeout(addLogo, 100)
+      }
+    } else {
+      document.querySelectorAll('.remark-slide-content:not(.title-slide):not(.inverse):not(.hide_logo)')
+        .forEach(function (slide) {
+          const logo = document.createElement('div')
+          logo.classList = 'xaringan-extra-logo'
+          logo.href = null
+          slide.appendChild(logo)
+        })
+    }
+  }
+  document.addEventListener('DOMContentLoaded', addLogo)
+})()</script>
+</div>
+
+
+
+
+
+
+
+.title[.bold[Trình bày kết quả nghiên cứu với R]]
+
+.font120[
+SSC - Dự án đồng hành cùng sinh viên NCKH
+]
+
+&lt;style&gt;
+.title {
+  font-size: 56px;
+  font-family: 'Roboto', Arial, sans-serif;
+  color: #008080;
+}
+&lt;/style&gt;
+
+&lt;img src="R_Rstudio.png" width="200px"/&gt;
+
+&lt;/br&gt;
+Tien N.T.Nguyen | Trung tâm .orange[DI] &amp; .blue[ADR] Quốc gia, HUP | 20 May. 2022
+
+---
+## .ssc[Lời cảm ơn]
+
+.pull-left[
+.center[
+&lt;img src="hup.png" width="30%" height="30%" /&gt;
+
+&lt;img src="ssc_logo.png" width="50%" height="50%" /&gt;
+]
+]
+
+.pull-right[
+.center[
+&lt;img src="logoADR.png" width="50%" height="50%" /&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;img src="Bayes-education.png" width="35%" height="35%" /&gt;
+]
+]
+
+---
+## .ssc[Bố cục]
+
+.large[
+1. Vai trò của R trong nghiên cứu
+2. R *rất* cơ bản
+3. Kết quả dạng Bảng
+4. Trình bày kết quả dạng sơ đồ với [Diagram.net](https://www.diagrams.net/)
+5. Nguyên tắc trực quan hóa dữ liệu với
+6. Trực quan hóa dữ liệu với R 
+]
+
+---
+class: center, middle
+## .ssc[Bài 1: Vai trò của R | R *rất* cơ bản | Kết quả dạng Bảng | Trình bày kết quả dạng sơ đồ với Diagram.net]
+
+---
+class: center, middle
+# .ssc[Vai trò R]
+
+---
+### .ssc[Giới thiệu về R]
+R là một ngôn ngữ và môi trường lập trình cho tính toán và đồ họa thống kê &lt;sup&gt;1&lt;/sup&gt; 
+
+--
+Một số ưu điểm:
+
+- Miễn phí (**free**), mã nguồn mở (**open-source**)
+- Hỗ trợ đầy đủ (exemplary support) cho xử lý dữ liệu (**data wrangling**)
+- Tái lặp (**reproducible**) và khả năng tái sử dụng code (**reusable**) &lt;- Tốn thời gian để tìm hiểu và thực hành
+
+--
+- **Đa dạng `packages`** cho nhiều mục đích khác nhau =&gt; **tích hợp đầy đủ** các bước trong quá trình xử lý, phân tích, và trực quan hóa dữ liệu
+- Chất lượng đồ thị cao, có khả năng xuất bản, công bố (**publishable graph**)
+- Xử lý với lượng **dữ liệu lớn**
+- *"Ít programing"* hơn các ngôn ngữ khác
+
+.footnote[[1] https://www.r-project.org/about.html]
+
+---
+### .ssc[Khả năng tái lặp nghiên cứu và vai trò của R]
+Khả năng tái lặp nghiên cứu
+
+.center[
+&lt;img src="Reprodu_research.jpg" width="60%" height="60%" /&gt;
+]
+
+---
+### .ssc[Khả năng tái lặp nghiên cứu và vai trò của R]
+Vai trò của R (tương tự với các ngôn ngữ lập trình khác)
+
+.center[
+&lt;img src="Reprodu_research_withR.jpg" width="80%" height="80%" /&gt;
+]
+
+---
+### .ssc[Khả năng tái sử dụng code]
+- Tốn thời gian để tìm hiểu và thực hành code
+- Code được lưu trữ và sử dụng sau này
+
+.center[
+&lt;img src="Rcode.png" width="60%" height="60%" /&gt;
+]
+
+---
+### .ssc[R - Publishable graph]
+
+--
+.pull-left[
+In Academic
+.center[
+&lt;div class="figure"&gt;
+&lt;img src="Rgraph1.png" alt="https://doi.org/10.1007/s40264-018-0758-8" width="80%" height="80%" /&gt;
+&lt;p class="caption"&gt;https://doi.org/10.1007/s40264-018-0758-8&lt;/p&gt;
+&lt;/div&gt;
+]
+]
+
+--
+.pull-right[
+Or in Magazine
+&lt;img src="Rgraph2.png" width="80%" height="80%" /&gt;
+
+&lt;img src="circle_bar.png" width="55%" height="55%" /&gt;
+]
+
+---
+### .ssc[With the fast growth of data-related tasks]
+
+.center[
+&lt;img src="growth_program_meme_spidermen.jpg" width="50%" height="50%" /&gt;
+]
+
+---
+### .ssc[Learning programing language (like R) leverages your career]
+
+.center[
+&lt;img src="Industry-sector-using-R.png" width="60%" height="60%" /&gt;
+]
+
+---
+### .ssc[Learning programing language (like R) leverages your career]
+
+&lt;br&gt;
+.pull-left[
+.center[ 
+&lt;img src="IQVIA_jobs.png" width="100%" height="100%" /&gt;
+]
+]
+
+.pull-right[
+.center[
+&lt;img src="norvatis_jobs.png" width="100%" height="100%" /&gt;
+
+&lt;img src="oucru_jobs.png" width="100%" height="100%" /&gt;
+]
+]
+
+---
+### .ssc[Hướng dẫn sử dụng RStudio]
+
+--
+.center[
+&lt;img src="Rstudio_Anatomy.png" width="70%" height="60%" /&gt;
+]
+
+---
+### .ssc[Quy tắc đặt tên file và path]
+&lt;u&gt;Lưu ý:&lt;/u&gt; Thư mục (folder) làm việc và tên file (file data, file R) .red[**không được**] để dấu tiếng Việt, **không nên** để khoảng trắng
+
+---
+class: center, middle
+# .scc[R *rất* cơ bản]
+&lt;img src="R_beginner.png" width="60%" height="60%" /&gt;
+
+---
+### .ssc[Comment]
+
+--
+Ký tự `#` thể hiện là 1 comment. *Tất cả* phía bên phải `#` (kể cả `#`) không được thực thi khi chạy code
+
+```r
+# Đây là 1 comment
+# Biến a là cân nặng
+*x = 1
+# x = 2
+```
+
+--
+Kết quả khi *in* ra biến `x`
+
+```r
+x
+```
+
+```
+## [1] 1
+```
+
+
+---
+### .ssc[Biến (Variables) và Gán giá trị (Value Assignment)]
+R **không yêu cầu định dạng kiểu biến** khi khai báo biến mà sẽ tự hiểu. Gán giá trị bằng dấu `=` hoặc `&lt;-`
+
+```r
+x = 3             # intergers
+y = 1.2           # float (double)
+z = "Hello World" # character
+```
+
+--
+Xem kiểu của biến bằng lệnh `typeof()`
+
+```r
+typeof(z)
+```
+
+```
+## [1] "character"
+```
+
+---
+### .ssc[Quy tắc đặt tên biến/đối tượng]
+- PHẢI được bắt đầu bằng *chữ* và có thể chứa chữ cái, số, dấu `_` và dấu `.`. Tuy nhiên **không được dùng dấu "-" khi đặt tên biến**, **không nên dùng dấu chấm khi đặt tên biến**. Ví dụ `AGE98` là tên biến hợp lệ, trong khi `98AGE` không hợp lệ.
+- Phân biệt được giữa chữ hoa và chữ thường. Ví dụ: `Df1` khác với `df1`.
+- Không nên đặt tên có dấu tiếng Việt. Khuyến khích nên đặt luôn tên biên bằng Tiếng Anh.
+- Không nên chứa *khoảng trắng* (space) -&gt; dùng dấu `_` để thay cho khoảng trắng.
+
+--
+- Tên nên ngắn gọn và chứa thông tin cho biến.
+Ví dụ tên biến chứa thông tin về Mã của bệnh nhân: .blue[`ID_patient`] &gt; .blue[`Ma_benh_nhan`] &gt;&gt;&gt; .red[`Mã_bệnh_nhân`] &gt;&gt; .red[`Mã bệnh nhân`]
+
+---
+### .ssc[Tính toán cơ bản]
+
+--
+
+```r
+1 + 1
+```
+
+```
+## [1] 2
+```
+
+--
+
+```r
+(842-62)/3
+```
+
+```
+## [1] 260
+```
+
+--
+
+```r
+x = 2
+y = 5
+x * y
+```
+
+```
+## [1] 10
+```
+
+---
+### .ssc[Cấu trúc đối tượng trong R]
+
+--
+.center[
+&lt;img src="Vec_Df_list.png" width="80%" height="80%" /&gt;
+]
+
+---
+### .ssc[Vectors]
+
+--
+
+```r
+1:20
+```
+
+```
+##  [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20
+```
+
+--
+
+```r
+c(1,2,3,4,5)
+```
+
+```
+## [1] 1 2 3 4 5
+```
+
+--
+
+```r
+seq(0,100,by=10)
+```
+
+```
+##  [1]   0  10  20  30  40  50  60  70  80  90 100
+```
+
+--
+
+```r
+rep(1:5,5)
+```
+
+```
+##  [1] 1 2 3 4 5 1 2 3 4 5 1 2 3 4 5 1 2 3 4 5 1 2 3 4 5
+```
+
+--
+
+```r
+c("SSC", "SQL", "R", "Python", "BayesEducation", "DIADR")
+```
+
+```
+## [1] "SSC"            "SQL"            "R"              "Python"        
+## [5] "BayesEducation" "DIADR"
+```
+
+---
+### .ssc[Tính toán trên Vectors] 
+
+
+```r
+x = c(3,6,9,12,15)
+x
+```
+
+```
+## [1]  3  6  9 12 15
+```
+
+--
+
+```r
+x*3
+```
+
+```
+## [1]  9 18 27 36 45
+```
+
+--
+
+```r
+x/3
+```
+
+```
+## [1] 1 2 3 4 5
+```
+
+--
+
+```r
+(x - 1)/2
+```
+
+```
+## [1] 1.0 2.5 4.0 5.5 7.0
+```
+
+---
+### .ssc[DataFrames - Dữ liệu dạng bảng]
+
+--
+.pull-left[
+- Dữ liệu dạng bảng (cột, hàng)
+
+```r
+x = c(1, 2, 3, 4)
+y = c(0.3, 1.2, 1.9, 9.8)
+z = c("SSC", "R", "SQL", "Python")
+df = data.frame(x, y, z) # Hoặc tạo thông qua hàm tibble() trong tidyverse
+```
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;"&gt; x &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; y &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; z &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.3 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; SSC &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; R &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.9 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; SQL &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9.8 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Python &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+]
+
+--
+.pull-right[
+- Truy cập `biến`/`cột` bằng `$`. Ví dụ biến z
+
+```r
+df$y
+```
+
+```
+## [1] 0.3 1.2 1.9 9.8
+```
+
+- Truy cập `giá trị`/`dòng` trong `dataframe`
+
+```r
+df[1:2, ]      # data
+```
+
+```
+##   x   y   z
+## 1 1 0.3 SSC
+## 2 2 1.2   R
+```
+
+- Truy cập cả dòng + cột bằng df[rows, columns]
+
+```r
+df[1:2, c(1,3)]
+```
+
+```
+##   x   z
+## 1 1 SSC
+## 2 2   R
+```
+]
+
+---
+### .ssc[Hàm (Functions)]
+Bao gồm:
+- Hàm có sẵn trên R (base R)
+- Hàm chứa trong các ***Packages*** (phần sau)
+- Hàm tự viết (bỏ qua)
+
+---
+### .ssc[Hàm (Functions)]
+#### Hàm có sẵn trên R (base R) và Hàm chứa trong các ***Packages*** (phần sau)
+
+```r
+# Hàm tính trung bình
+mean(c(2,3,4))
+```
+
+```
+## [1] 3
+```
+
+--
+
+```r
+# Hoặc
+x = c(2,3,4)
+mean(x)
+```
+
+```
+## [1] 3
+```
+
+--
+
+```r
+# Hàm tính căn bậc 2
+sqrt(144)
+```
+
+```
+## [1] 12
+```
+
+--
+
+```r
+# Độ lệch chuẩn
+sd(c(2,3,4))
+```
+
+```
+## [1] 1
+```
+
+---
+### .ssc[Packages]
+
+--
+- ***Packages*** chứa các hàm được viết sẵn (một số `packages` chứa thêm các data), phục vụ cho 1 hay nhiều mục đích nhất định nào đó, ví dụ Packages về *thao tác* dữ liệu (`dplyr`), trực quan hóa dữ liệu (`ggplot2`)
+
+--
+- `Packages` thường được *tìm thấy* ở [CRAN](https://cran.r-project.org/) repository hoặc GitHub repository (ví dụ [ggplot2](https://github.com/tidyverse/ggplot2))
+
+--
+  + Cài đặt `packages` từ [CRAN](https://cran.r-project.org/) bằng lệnh `install.packages("Tên packages")`, Ví dụ:
+```{}
+install.packages("tidyverse")
+```
+
+  + Cài đặt `packages`, ví dụ [ggplot2](https://github.com/tidyverse/ggplot2) từ GitHub:
+```{}
+install.packages("devtools")
+# devtools:: tương đương với lệnh library(devtools)
+devtools::install_github("tidyverse/ggplot2")   
+```
+
+--
+- Sau khi **đã cài đặt**, gọi packages bằng hàm `library(Tên packages)`
+```{}
+library(tidyverse)   # hoặc sử dụng require(tidyverse)
+```
+
+---
+### .ssc[Packages sử dụng]
+#### `Tidyverse` (-&gt; `ggplot2`) packages
+Là 1 bộ tập hợp các `packages` phục vụ cho mục tiêu xử lý, mô hình hóa, phân tích, và **trực quan hóa** dữ liệu.
+
+--
+.center[
+&lt;img src="tidyverse.png" width="60%" height="60%" /&gt;
+]
+
+- Buổi .ssc[*talk*] hôm nay tập trung vào `ggplot2` cho mục đích trực quan hóa dữ liệu (biểu đồ). Ngoài ra, `packages` `table1` được sử dụng cho thiết lập bảng trên R.
+
+---
+### .ssc[Packages sử dụng]
+- Cài đặt thư viện sử dụng (chỉ cần cài 1 lần)
+```{}
+install.packages("tidyverse") 
+install.packages("readxl")  # ĐỌc file excel
+install.packages("GGally")  # Sử dụng cho biểu đồ tương quan correlogram
+install.packages("ggpmisc") # Sử dụng tính phương trình và R^2 cho biểu đồ
+install.packages("arsenal") # Sử dụng cho Bảng 1
+```
+
+- Sau đó `load` các thư viện trước khi làm việc
+```{}
+library(tidyverse)
+library(readxl)
+library(GGally)
+library(ggpmisc)
+library(arsenal)
+```
+
+---
+class: center, middle
+# .ssc[Chuẩn bị dữ liệu - Tidy data]
+
+---
+### .ssc[Dữ liệu gọn gàng (Tidy data)]
+- Mỗi biến trên 1 cột
+- Mỗi quan sát trên 1 dòng
+- Mỗi giá trị trên 1 cells (ô)
+
+--
+.center[
+&lt;img src="tidydata.png" width="110%" height="110%" /&gt;
+]
+
+---
+### .ssc[Tidy data - ví dụ]
+
+.pull-left[
+Non-tidy data
+.center[
+&lt;img src="non_tidy1.png" width="90%" height="90%" /&gt;
+]
+]
+
+--
+.pull-right[
+Tidy data
+.center[
+&lt;img src="tidy1.png" width="80%" height="80%" /&gt;
+]
+]
+
+---
+### .ssc[Dữ liệu thực tế đa phần messy]
+.center[
+&lt;img src="tidydata_realworld.jpg" width="80%" height="80%" /&gt;
+]
+
+---
+### .ssc[Chuẩn bị dữ liệu trên excel]
+- Buổi *.scc[talk]* hôm nay không đề cập đến task **xử lý, làm sạch dữ liệu** -&gt; Cần chuẩn bị trước
+- *NÊN* chuẩn bị *"sát"* như thế này trên file `excel`
+.center[
+&lt;img src="tidy_excel.png" width="80%" height="80%" /&gt;
+]
+
+---
+class: center, middle
+# .ssc[Đọc &amp; xuất 1 số file cơ bản vào R]
+
+---
+### .red[Nhập và xuất file `excel`]
+
+- Sử dụng `packages` `readxl` để đọc và `writexl` để xuất file excel
+- `readxl` thuộc `tidyverse`, tuy nhiên phải gọi riêng khi sử dụng thông qua lệnh `library(readxl)`
+- `writexl` cần cài đặt trước qua lệnh `install.packages("writexl")`
+
+```{}
+# Đọc file
+library(readxl)
+my_data = read_excel(
+  "D:/your_data_directory/your_data_name.xlsx",  # your path and file
+  sheet = "your_selected_sheet"
+)
+
+# Xuất file
+#install.packages("writexl")  # cài package trước
+library(writexl)
+write_xlsx(my_data, "D:/your_directory_to_save/your_xlsx_name.xlsx")
+```
+
+&lt;u&gt;Lưu ý&lt;/u&gt;: 
+- Sử dụng đúng định dạng file, `.xlsx` hoặc `.xls`
+- Dùng dấu `/` thay cho dấu `\` mặc định của windows
+
+---
+### .red[Nhập và xuất file `csv`]
+
+.pull-left[
+```{}
+library(readr)
+
+# Đọc file
+my_data = read.csv( hoặc read.csv2(
+  "D:/your_data_directory/your_data_name.csv",  # your path and file
+  sheet = "your_selected_sheet"
+)
+
+# Xuất file
+write.csv(
+  my_data, 
+  "D:/your_directory_to_save/your_csv_name.csv"
+)
+```
+]
+
+--
+.pull-right[
+- Dùng lệnh `_csv()` tùy thuộc vào data:
+.center[
+&lt;img src="read_csv_12.png" width="90%" height="90%" /&gt;
+]
+]
+
+---
+### .red[Nhập dữ liệu từ `SPSS`, `SAS`, `Stata`]
+
+- Sử dụng `packages` `haven`
+- Thuộc `tidyverse`, tuy nhiên phải gọi riêng khi sử dụng qua lệnh `library(haven)`
+
+```{}
+library(haven)
+
+# SAS
+my_data = read_sas("D:/your_data_directory/your_data_name.sas7bdat")
+write_sas(my_data, "D:/your_directory_to_save/your_sas_name.sas7bdat")
+
+# SPSS
+my_data = read_sav("D:/your_data_directory/your_data_name.sav")
+write_sav(my_data, "D:/your_directory_to_save/your_spss_name.sav")
+
+# Stata
+my_data = read_dta("D:/your_data_directory/your_data_name.dta")
+write_dta(my_data, "D:/your_directory_to_save/your_stata_name.dta")
+```
+
+---
+### .ssc[Đọc các file sử dụng cho buổi hôm nay]
+
+
+```r
+df1 = read.csv("E:/SSC_R_visu/data_ggplot2_layer.csv")
+df_bar = read_xlsx("E:/SSC_R_visu/bar_error_bar.xlsx", sheet = "No_Error_bar")
+df_bar_error = read_xlsx("E:/SSC_R_visu/bar_error_bar.xlsx", sheet = "With_error_bar")
+df_evo_1 = read_xlsx("E:/SSC_R_visu/Anbio_asump.xlsx", sheet = "Tidy")
+df_evo_2 = read_xlsx("E:/SSC_R_visu/PK_data.xlsx")
+df_table = read_xlsx("E:/SSC_R_visu/data_table.xlsx")
+```
+
+**Lưu ý: Đây đều là dữ liệu có sẵn/tự tạo -&gt; sử dụng mà không cần sự cho phép**
+
+---
+### .ssc[Ví dụ thay dổi tên biến về dạng của R]
+
+
+|Thời gian  |  Năm| Tháng|Thuốc          | Số liều DDD|
+|:----------|----:|-----:|:--------------|-----------:|
+|2016-01-01 | 2016|     1|CiprofloxacinO |   4.2817538|
+|2016-01-01 | 2016|     1|CiprofloxacinP |   2.7954615|
+|2016-01-01 | 2016|     1|LevofloxacinO  |   0.0000000|
+|2016-01-01 | 2016|     1|LevofloxacinP  |   0.1540199|
+|2016-01-01 | 2016|     1|MoxifloxacinP  |   0.0000000|
+|2016-02-01 | 2016|     2|CiprofloxacinO |   5.1242550|
+|2016-02-01 | 2016|     2|CiprofloxacinP |   2.1594483|
+|2016-02-01 | 2016|     2|LevofloxacinO  |   0.0000000|
+|2016-02-01 | 2016|     2|LevofloxacinP  |   0.4355190|
+|2016-02-01 | 2016|     2|MoxifloxacinP  |   0.0000000|
+
+---
+### .ssc[Ví dụ thay dổi tên biến về dạng của R]
+Lệnh `names(ten_data_frame)`
+
+```r
+names(df_evo_1) = c("Time", "Year", "Month", "Drug", "DDD")
+```
+
+|Time       | Year| Month|Drug           |       DDD|
+|:----------|----:|-----:|:--------------|---------:|
+|2016-01-01 | 2016|     1|CiprofloxacinO | 4.2817538|
+|2016-01-01 | 2016|     1|CiprofloxacinP | 2.7954615|
+|2016-01-01 | 2016|     1|LevofloxacinO  | 0.0000000|
+|2016-01-01 | 2016|     1|LevofloxacinP  | 0.1540199|
+|2016-01-01 | 2016|     1|MoxifloxacinP  | 0.0000000|
+|2016-02-01 | 2016|     2|CiprofloxacinO | 5.1242550|
+|2016-02-01 | 2016|     2|CiprofloxacinP | 2.1594483|
+|2016-02-01 | 2016|     2|LevofloxacinO  | 0.0000000|
+|2016-02-01 | 2016|     2|LevofloxacinP  | 0.4355190|
+|2016-02-01 | 2016|     2|MoxifloxacinP  | 0.0000000|
+
+---
+class: center, middle
+# .ssc[Bảng 1 trong các nghiên cứu với thư viện `arsenal`]
+
+---
+##### .ssc[Ví dụ Bảng 1 - đặc điểm chung (N Engl J Med 2020; 382:2372-2374 | DOI: 10.1056/NEJMc2010419)]
+
+.center[
+&lt;img src="Table1_NEMJ.png" width="60%" height="60%" /&gt;
+]
+
+---
+### .ssc[Ví dụ trên R - `df_table` dataset]
+
+<div id="htmlwidget-f7c8d108a53bc568f921" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-f7c8d108a53bc568f921">{"x":{"filter":"none","vertical":false,"extensions":["Buttons"],"data":[["Drug A","Drug B","Drug A","Drug A","Drug A","Drug B","Drug A","Drug A","Drug A","Drug B","Drug B","Drug B","Drug B","Drug B","Drug B","Drug B","Drug A","Drug B","Drug A","Drug A","Drug A","Drug A","Drug A","Drug A","Drug B","Drug B","Drug A","Drug B","Drug B","Drug A","Drug B","Drug A","Drug B","Drug A","Drug A","Drug A","Drug B","Drug A","Drug B","Drug B","Drug B","Drug B","Drug A","Drug B","Drug A","Drug B","Drug A","Drug B","Drug B","Drug B","Drug B","Drug B","Drug B","Drug B","Drug B","Drug B","Drug B","Drug A","Drug B","Drug B","Drug A","Drug A","Drug A","Drug B","Drug B","Drug B","Drug B","Drug B","Drug B","Drug A","Drug A","Drug A","Drug A","Drug B","Drug A","Drug A","Drug A","Drug B","Drug B","Drug A","Drug A","Drug A","Drug A","Drug B","Drug A","Drug A","Drug A","Drug A","Drug A","Drug B","Drug B","Drug B","Drug A","Drug B","Drug B","Drug B","Drug B","Drug B","Drug A","Drug A","Drug B","Drug B","Drug B","Drug A","Drug A","Drug B","Drug B","Drug A","Drug A","Drug A","Drug B","Drug A","Drug A","Drug A","Drug B","Drug A","Drug B","Drug B","Drug A","Drug A","Drug B","Drug A","Drug B","Drug B","Drug A","Drug A","Drug A","Drug B","Drug A","Drug B","Drug B","Drug B","Drug B","Drug A","Drug B","Drug A","Drug A","Drug A","Drug B","Drug B","Drug A","Drug B","Drug A","Drug B","Drug B","Drug A","Drug B","Drug A","Drug A","Drug B","Drug A","Drug B","Drug A","Drug A","Drug B","Drug A","Drug B","Drug A","Drug B","Drug B","Drug B","Drug B","Drug B","Drug A","Drug B","Drug B","Drug A","Drug B","Drug A","Drug A","Drug B","Drug A","Drug A","Drug B","Drug B","Drug B","Drug A","Drug B","Drug B","Drug A","Drug A","Drug A","Drug B","Drug B","Drug B","Drug B","Drug B","Drug A","Drug A","Drug A","Drug A","Drug A","Drug A","Drug B","Drug A","Drug B","Drug A","Drug A","Drug A","Drug A"],[23,9,31,null,51,39,37,32,31,34,42,63,54,21,48,71,38,49,57,46,47,52,61,38,34,49,63,67,68,78,36,37,53,36,51,48,57,31,37,28,40,49,61,56,54,71,38,31,48,null,83,52,32,53,69,60,45,39,null,38,36,71,31,43,57,53,25,44,25,30,51,40,null,43,21,54,67,43,54,41,34,34,6,39,36,58,27,47,null,50,61,47,52,51,68,33,65,34,38,60,10,49,56,50,60,49,54,39,48,65,47,61,34,null,null,58,26,44,17,68,57,66,44,null,67,48,62,35,53,53,66,55,57,47,58,43,45,44,63,59,44,53,51,28,65,63,76,61,33,48,42,36,55,20,26,50,47,74,50,31,45,51,66,76,47,48,56,70,46,43,41,41,19,49,43,43,75,52,42,37,45,35,67,38,44,45,39,46,null,42,60,31,45,38,null,19,69,66,null,64],[0.16,1.107,0.277,2.067,2.767,0.613,0.354,1.739,0.144,0.205,0.513,0.06,0.831,0.258,0.128,0.445,2.083,0.157,0.066,0.325,0.266,0.719,1.713,0.096,0.105,0.043,0.981,1.156,0.105,0.175,0.309,1.869,2.008,1.894,0.16,1.209,0.108,0.611,0.222,0.803,0.37,null,0.177,1.479,0.161,0.737,0.124,0.092,0.385,0.21,0.475,1.628,0.583,null,0.702,1.206,2.213,1.406,0.101,0.013,2.032,1.046,0.408,2.636,1.263,null,2.447,1.041,0.531,0.924,1.087,0.733,2.157,0.333,1.527,2.238,0.153,0.305,0.131,0.386,1.645,1.321,0.229,0.615,1.976,1.941,0.22,3.874,0.982,1.68,1.091,0.169,0.511,2.141,0.599,null,0.389,0.005,0.075,1.491,0.358,1.709,0.056,1.354,2.522,0.387,0.592,0.243,0.215,1.207,0.29,0.718,0.589,0.003,1.328,0.308,0.691,3.249,0.039,1.804,0.238,2.702,1.441,0.27,null,null,0.062,2.19,0.976,3.062,0.124,0.045,1.892,0.711,1.079,1.061,0.239,0.361,0.033,1.133,1.225,1.418,3.751,3.02,0.086,0.772,1.882,2.725,2.41,0.352,0.895,0.215,0.141,2.288,1.658,1.255,1.306,0.081,0.667,0.046,0.662,1.985,1.063,1.55,0.015,0.056,null,0.51,0.929,2.345,0.25,0.816,0.022,0.16,0.547,3.642,0.092,1.2,1.512,2.124,null,0.862,0.182,1.075,0.021,0.402,0.063,1.129,0.61,null,0.717,0.205,0.946,0.386,0.37,1.148,null,0.136,0.439,1.148],["T1","T2","T1","T3","T4","T4","T1","T1","T1","T3","T1","T3","T4","T4","T1","T4","T4","T2","T1","T1","T2","T2","T4","T4","T4","T2","T4","T1","T4","T3","T1","T2","T3","T3","T3","T3","T1","T1","T4","T4","T3","T1","T4","T3","T4","T1","T1","T2","T1","T4","T1","T2","T2","T3","T3","T2","T4","T1","T4","T2","T4","T1","T4","T1","T4","T1","T1","T1","T4","T1","T2","T2","T2","T1","T4","T4","T2","T2","T4","T4","T3","T2","T4","T3","T2","T4","T1","T2","T1","T4","T3","T3","T1","T3","T2","T3","T2","T2","T3","T4","T4","T3","T3","T2","T3","T2","T2","T3","T2","T1","T1","T3","T4","T1","T4","T3","T3","T2","T4","T2","T1","T2","T1","T4","T3","T3","T3","T2","T1","T2","T1","T2","T2","T1","T3","T2","T1","T1","T1","T3","T3","T4","T1","T2","T2","T1","T3","T4","T2","T4","T2","T1","T2","T3","T1","T3","T4","T2","T2","T1","T2","T2","T3","T1","T2","T2","T1","T1","T3","T2","T3","T1","T1","T2","T4","T2","T4","T4","T2","T3","T4","T3","T4","T4","T1","T1","T4","T4","T4","T1","T2","T2","T2","T4","T3","T3","T2","T2","T4","T3"],["II","I","II","III","III","I","II","I","II","I","III","I","III","I","I","III","III","II","III","II","I","II","I","I","II","III","II","II","II","I","III","II","I","I","I","III","II","II","III","II","II","III","III","I","III","I","III","II","II","II","III","III","III","II","III","I","III","I","II","II","III","I","II","I","II","I","I","I","III","II","I","III","III","III","II","III","III","I","II","I","I","I","I","III","I","III","I","I","I","III","III","III","III","III","III","III","III","II","III","I","III","I","II","II","I","II","II","III","I","III","III","I","I","I","II","III","III","II","I","III","II","I","II","II","II","I","III","III","II","III","I","I","I","II","II","III","II","II","II","II","II","I","I","III","II","II","II","II","II","I","I","III","II","II","I","II","I","II","III","II","I","I","I","III","I","I","II","I","I","III","III","I","III","II","I","III","I","II","I","I","III","I","II","I","II","II","II","III","II","II","III","II","III","III","II","I","II","III","III","I"],[0,1,0,1,1,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,1,1,0,0,1,0,null,0,1,0,0,0,1,0,1,1,1,1,0,0,0,0,0,0,0,0,0,1,0,1,1,0,0,0,0,null,0,1,1,0,0,1,0,0,0,1,0,0,0,0,0,0,1,0,0,0,1,0,1,0,0,0,0,1,1,1,0,0,0,0,0,0,0,null,0,0,1,0,0,0,0,1,1,0,0,1,1,0,0,0,0,1,0,0,0,0,1,1,0,0,0,1,0,0,0,1,0,1,1,null,1,1,1,0,1,0,0,1,0,null,1,0,0,0,0,0,0,0,0,0,1,0,0,1,1,0,0,0,1,0,1,0,1,0,1,1,1,0,1,null,0,1,0,0,1,0,1,0,0,0,0,0,0,0,0,null,0,1,1,0,0],[0,0,0,1,1,1,0,1,0,1,0,0,1,1,1,1,0,1,0,0,0,0,1,1,1,1,0,0,1,1,0,1,0,0,0,1,1,0,1,1,1,1,1,0,1,0,0,0,1,1,1,1,0,0,1,1,1,1,1,1,1,0,1,0,0,1,0,1,1,1,0,0,0,0,0,1,1,1,1,0,1,0,0,0,1,1,0,1,1,1,1,1,1,0,0,1,1,0,1,1,1,0,0,0,1,1,1,1,0,1,1,0,1,1,0,0,1,0,0,0,0,0,1,1,1,0,1,1,1,1,0,0,1,1,0,1,0,0,1,1,0,0,0,0,1,0,0,0,1,1,0,0,1,1,1,0,1,1,1,0,0,0,0,1,0,1,1,1,1,1,1,0,0,0,1,0,1,0,1,1,1,0,1,1,0,0,1,1,1,1,0,1,0,1,1,0,1,0,1,0],[24,24,24,17.64,16.43,15.64,24,18.43,24,10.53,24,24,14.34,12.89,22.68,8.71,24,15.21,24,24,24,24,16.92,23.89,6.32,15.77,24,24,15.45,17.43,24,20.9,24,24,24,21.19,12.52,24,15.59,18,18.02,12.43,12.1,24,17.42,24,24,24,12.19,10.02,18.23,10.42,24,24,19.34,12.21,14.46,19.34,10.16,13.15,10.12,24,22.77,24,24,22.13,24,20.62,23.23,7.38,24,24,24,24,24,19.22,7.27,23.88,16.23,24,14.06,24,24,24,16.44,23.81,24,18.37,11.44,20.94,5.33,22.92,10.33,24,24,14.54,19.14,24,21.19,16.07,9.97,24,24,24,19.75,16.67,11.18,18.29,24,17.56,17.45,24,22.86,13.68,24,24,17.46,24,24,24,24,24,13,9.73,15.65,24,3.53,20.35,23.41,16.47,24,24,14.65,17.81,24,21.83,24,24,21.49,12.68,24,24,24,24,10.07,24,24,24,8.37,20.33,24,24,21.33,12.63,13.08,24,15.1,20.14,10.55,24,24,24,24,23.6,24,19.98,15.55,23.72,22.41,19.54,16.57,24,24,24,21.91,24,12.53,24,18.63,14.82,16.46,24,9.24,17.77,24,24,9.92,16.16,10.51,20.81,24,16.44,24,22.4,11.76,24,21.6,24,19.81,24]],"container":"<table class=\"compact\">\n  <thead>\n    <tr>\n      <th>Drug<\/th>\n      <th>Age<\/th>\n      <th>Biomarker<\/th>\n      <th>Stage<\/th>\n      <th>Grade<\/th>\n      <th>Response<\/th>\n      <th>Death<\/th>\n      <th>Month_to_death<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"tBp","buttons":["copy","excel"],"pageLength":10,"columnDefs":[{"className":"dt-right","targets":[1,2,5,6,7]}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+
+---
+### .ssc[Bảng 1 với R]
+
+Bước 1: Sử dụng hàm `tableby()` với công thức:&lt;br&gt;
+&lt;center&gt; `Biến phụ thuốc ~ biến độc lập 1 + biến độc lập 2 + ...` &lt;/center&gt;
+**&lt;u&gt;Lưu ý**:&lt;/u&gt; Sử dụng `as.factor()` cho các biến ở dạng `factor` nhưng được lưu trữ ở dạng biến số (Ví dụ trong trường hợp này là biến `Response`, 0/1: không/có đáp ứng điều trị), vì lúc này R sẽ hiểu là biến liên tục
+
+
+```r
+*tab1 &lt;- tableby(
+  Death ~ Drug + Age + as.factor(Response), 
+  data = df_table 
+) 
+```
+
+---
+### .ssc[Bảng 1 với R]
+
+Bước 2: *Tổng kết* bằng hàm `summary()` cho `object` vừa tạo
+
+```{}
+summary(tab1)
+```
+
+---
+class: center, middle
+
+|                            |0 (N=88)        |1 (N=112)       |Total (N=200)   |p value |
+|:---------------------------|:---------------|:---------------|:---------------|:-------|
+|**Drug**                    |                |                |                |0.412   |
+|&amp;nbsp;&amp;nbsp;&amp;nbsp;Drug A    |46 (52.3%)      |52 (46.4%)      |98 (49.0%)      |        |
+|&amp;nbsp;&amp;nbsp;&amp;nbsp;Drug B    |42 (47.7%)      |60 (53.6%)      |102 (51.0%)     |        |
+|**Age**                     |                |                |                |0.302   |
+|&amp;nbsp;&amp;nbsp;&amp;nbsp;N-Miss    |2               |9               |11              |        |
+|&amp;nbsp;&amp;nbsp;&amp;nbsp;Mean (SD) |46.058 (14.686) |48.223 (13.987) |47.238 (14.312) |        |
+|&amp;nbsp;&amp;nbsp;&amp;nbsp;Range     |6.000 - 76.000  |10.000 - 83.000 |6.000 - 83.000  |        |
+|**as.factor(Response)**     |                |                |                |0.002   |
+|&amp;nbsp;&amp;nbsp;&amp;nbsp;N-Miss    |2               |5               |7               |        |
+|&amp;nbsp;&amp;nbsp;&amp;nbsp;0         |49 (57.0%)      |83 (77.6%)      |132 (68.4%)     |        |
+|&amp;nbsp;&amp;nbsp;&amp;nbsp;1         |37 (43.0%)      |24 (22.4%)      |61 (31.6%)      |        |
+
+---
+### .ssc[Tùy chỉnh thay đổi `summary statistics`]
+
+Ví dụ biến liên tục không theo phân bố chuẩn -&gt; Median[Q1 - Q3]. Đồng thời thay đổi `test` thành Kruskal-Wallis test
+
+```r
+tab2 = tableby(
+  Death ~ Drug + Age + as.factor(Response), data = df_table,
+* numeric.stats = c("median","q1q3"),
+* numeric.test = "kwt"
+) 
+```
+```{}
+summary(tab2)
+```
+
+---
+class: center, middle
+
+|                         |0 (N=88)       |1 (N=112)      |Total (N=200)  |p value |
+|:------------------------|:--------------|:--------------|:--------------|:-------|
+|**Drug**                 |               |               |               |0.412   |
+|&amp;nbsp;&amp;nbsp;&amp;nbsp;Drug A |46 (52.3%)     |52 (46.4%)     |98 (49.0%)     |        |
+|&amp;nbsp;&amp;nbsp;&amp;nbsp;Drug B |42 (47.7%)     |60 (53.6%)     |102 (51.0%)    |        |
+|**Age**                  |               |               |               |0.484   |
+|&amp;nbsp;&amp;nbsp;&amp;nbsp;Median |46.500         |48.000         |47.000         |        |
+|&amp;nbsp;&amp;nbsp;&amp;nbsp;Q1, Q3 |36.250, 56.750 |38.000, 57.500 |38.000, 57.000 |        |
+|**as.factor(Response)**  |               |               |               |0.002   |
+|&amp;nbsp;&amp;nbsp;&amp;nbsp;N-Miss |2              |5              |7              |        |
+|&amp;nbsp;&amp;nbsp;&amp;nbsp;0      |49 (57.0%)     |83 (77.6%)     |132 (68.4%)    |        |
+|&amp;nbsp;&amp;nbsp;&amp;nbsp;1      |37 (43.0%)     |24 (22.4%)     |61 (31.6%)     |        |
+
+---
+### .ssc[Tùy chỉnh thay đổi `summary statistics`]
+
+Thay đổi 1 số đối số (chủ yếu dùng 2 cái đầu tiên):
+- **numeric.stats**: Continuous variables will show by default Nmiss, meansd, range
+- **cat.stats**: Categorical and factor variables will show by default Nmiss, countpct
+- ordered.stats: Ordered factors will show by default Nmiss, countpct
+- surv.stats: Survival variables will show by default Nmiss, Nevents, medsurv
+- date.stats: Date variables will show by default Nmiss, median, range
+
+Thay đổi các `statistic`: max, min, mean, sd, var, median, range,...
+
+---
+### .ssc[Tùy chỉnh thay đổi `test`]
+
+Hoặc thay đổi test cho từng biến. Ví dụ chi-square cho biến `Drug`, ANOVA cho biến `AGE`, không test cho biến `Response`
+
+
+```r
+tab3 = tableby(
+  Death ~ chisq(Drug) + anova(Age) + notest(as.factor(Response)), data = df_table
+)
+```
+```{}
+summary(tab3)
+```
+
+---
+class: center, middle
+
+|                            |0 (N=88)        |1 (N=112)       |Total (N=200)   |p value |
+|:---------------------------|:---------------|:---------------|:---------------|:-------|
+|**Drug**                    |                |                |                |0.412   |
+|&amp;nbsp;&amp;nbsp;&amp;nbsp;Drug A    |46 (52.3%)      |52 (46.4%)      |98 (49.0%)      |        |
+|&amp;nbsp;&amp;nbsp;&amp;nbsp;Drug B    |42 (47.7%)      |60 (53.6%)      |102 (51.0%)     |        |
+|**Age**                     |                |                |                |0.302   |
+|&amp;nbsp;&amp;nbsp;&amp;nbsp;N-Miss    |2               |9               |11              |        |
+|&amp;nbsp;&amp;nbsp;&amp;nbsp;Mean (SD) |46.058 (14.686) |48.223 (13.987) |47.238 (14.312) |        |
+|&amp;nbsp;&amp;nbsp;&amp;nbsp;Range     |6.000 - 76.000  |10.000 - 83.000 |6.000 - 83.000  |        |
+|**as.factor(Response)**     |                |                |                |        |
+|&amp;nbsp;&amp;nbsp;&amp;nbsp;N-Miss    |2               |5               |7               |        |
+|&amp;nbsp;&amp;nbsp;&amp;nbsp;0         |49 (57.0%)      |83 (77.6%)      |132 (68.4%)     |        |
+|&amp;nbsp;&amp;nbsp;&amp;nbsp;1         |37 (43.0%)      |24 (22.4%)      |61 (31.6%)      |        |
+
+---
+### .ssc[Một số test - Lựa chọn tùy tính huống cụ thể]
+
+- anova: analysis of variance test; the default test for continuous variables. It is **equivalent to the two-sample t-test with equal variance when the grouping variable has two levels**.
+
+- kwt: Kruskal-Wallis test, optional test for continuous variables. When the grouping variable has two levels, it is equivalent to the Wilcoxon Rank Sum test.
+
+- wt: An explicit Wilcoxcon test.
+
+- medtest: Median test test, optional test for continuous variables.
+
+- chisq: chi-square goodness of fit test for equal counts of a categorical variable across categories; the default for categorical or factor variables
+
+- fe: Fisher’s exact test for categorical variables; optional
+
+- logrank: log-rank test, the default test for time-to-event variables
+
+- trend: The independence_test function from the coin is used to test for trends. Whenthe grouping variable has two levels, it is equivalent to the Armitage trend test. This is the default for ordered factors
+
+- stddiff: perform standardized differences.
+
+- notest: Don’t perform a test
+
+---
+### .ssc[Xuất sang file `csv` và tùy chỉnh tiếp]
+
+```{}
+tab3 = tableby(
+  Death ~ chisq(Drug) + anova(Age) + notest(as.factor(Response)), data = df_table
+)
+
+write.csv(summary(tab3), 
+          "D:/your_directory_to_save/your_csv_file_name.csv")
+```
+
+---
+class: center, middle
+# .ssc[Trình bày kết quả ở dạng sơ đồ Flowchart]
+**.Large[Sử dụng trang web [diagram.net](https://www.diagrams.net/)]**
+
+---
+### .ssc[Một số ký hiệu cơ bản]
+
+.center[
+&lt;img src="flowchart.png" width="60%" height="60%" /&gt;
+]
+
+---
+### .ssc[Sử cho mô tả phương pháp (trái) hoặc trình bày kết quả (phải)]
+
+.center[
+&lt;img src="flow_vd1.png" width="100%" height="100%" /&gt;
+]
+
+---
+class: center, middle
+# .ssc[Demo 1 số thao tác cơ bản]
+
+---
+class: center, middle
+&lt;img src="tks_slide.png" width="60%" height="60%" /&gt;
+
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9",
+"navigation": {
+"scroll": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+<style>
+.logo {
+  background-image: url(logoADR.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  position: absolute;
+  top: 1.2em;
+  right: 5em;
+  width: 110px;
+  height: 112px;
+  z-index: 0;
+}
+</style>
+
+<script>
+document
+  .querySelectorAll(
+    '.remark-slide-content' +
+    ':not(.title-slide)' +
+    // add additional classes to exclude here, e.g.
+    // ':not(.inverse)' +
+    ':not(.hide-logo)'
+  )
+  .forEach(el => {
+    el.innerHTML += '<div class="logo"></div>';
+  });
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
